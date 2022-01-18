@@ -231,7 +231,7 @@ function sortedRanking(array $teams, array $matches): array
     for ($rank = 1; $rank <= count($result); $rank++) {
         $result[$rank - 1]['rank']=$rank;
       }
-    var_dump($result);
+    //var_dump($result);
     return $result;
 }
 
