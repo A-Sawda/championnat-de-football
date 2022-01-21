@@ -17,9 +17,11 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         touch('database/database.sqlite');
-        $this->repository = new Repository();
-        $this->repository->createDatabase();
-        $this->repository->insertTeam(['id'=>1, 'name' => 'Marseille']);
+        $repository = new Repository();
+        $repository->createDatabase();
+        $repository->fillDatabase();
+        $repository->updateRanking();
+        /*$this->repository->insertTeam(['id'=>1, 'name' => 'Marseille']);
         $this->repository->insertTeam(['id'=>2, 'name' => 'Bordeaux']);
         $this->repository->insertTeam(['id'=>3, 'name' => 'Nantes']);
         $this->repository->insertTeam(['name' => 'Paris']);
@@ -27,7 +29,7 @@ class DatabaseSeeder extends Seeder
         $this->repository->insertMatch(['team0'=>1, 'team1'=>3, 'score0'=>1, 'score1'=>1, 'date'=>'2022-01-03 10:00']);
         //SELECT * FROM teams;
         //var_dump($this->repository->team(3));
-        //var_dump($this->repository->matches());
+        //var_dump($this->repository->matches());*/
     }
 
 }
