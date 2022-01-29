@@ -14,4 +14,26 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    public function __construct(Repository $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    public function showRanking()
+    {
+        $ranking = $this->repository->sortedRanking();
+        return view('ranking', ['ranking' => $ranking]);
+    }
+
+    public function showTeam(int $teamId)
+    {
+        $teamMatches = $this->repository->teamMatches($teamId);
+        $rankingRow = $this->repository->rankingRow($teamId);
+        return view('team', ['rankingRow' => $rankingRow, 'teamMatches' => $teamMatches]);
+    }
+
+    
+
 }
+
+

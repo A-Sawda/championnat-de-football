@@ -106,4 +106,22 @@ class RepositoryTest extends TestCase
         $this->repository->fillDatabase();
         $this->assertEquals($this->repository->teamMatches(4), $this->data->expectedMatchesForTeam4());
     }
+
+    function testRankingRow(): void
+    {
+        $this->repository->fillDatabase();
+        $this->repository->updateRanking();
+        foreach ($this->data->expectedSortedRankingWithName() as $row) {
+            $this->assertEquals($this->repository->rankingRow($row['team_id']), $row);
+        }
+    }
+
+function testRankingRowThrowsExceptionIfTeamDoesNotExist(): void 
+    {
+        $this->repository->fillDatabase();
+        $this->repository->updateRanking();
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Équipe inconnue');
+        $this->repository->rankingRow(10000);
+    }
 }

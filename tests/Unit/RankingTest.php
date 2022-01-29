@@ -1,6 +1,8 @@
 <?php
 namespace Tests\Unit;
 
+//php vendor/phpunit/phpunit/phpunit --testdox
+
 use Tests\TestCase;
 use App\Repositories\Ranking;
 use App\Repositories\Data;

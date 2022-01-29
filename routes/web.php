@@ -13,3 +13,5 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
+Route::get('/', [Controller::class, 'showRanking'])->name('ranking.show');
+Route::get('/teams/{teamId}', [Controller::class, 'showTeam'])->where('teamId', '[0-9]+')->name('teams.show');
