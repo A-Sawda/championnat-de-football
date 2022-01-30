@@ -24,6 +24,9 @@ class Repository
     /*ajouter une équipe et retourner son identifiant */
     function insertTeam(array $team): int
     {   
+        /*if($team['name']=="Diffa"){
+            throw new Exception("Exception sawda"); 
+            }*/
         return array_key_exists("id", $team) ? 
         DB::table('teams')
             ->insertGetId([ 'id' =>$team['id'], 'name' =>$team['name'] ])
