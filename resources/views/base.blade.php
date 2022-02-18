@@ -11,7 +11,18 @@
                 <nav class="my-2 my-md-0 mr-md-3">
                     <a class="p-2 text-dark" href="/">Classement</a>
                 </nav>
-                <a class="btn btn-outline-primary" href="/login">Connexion</a>
+                @if (session()->has('user'))
+    <form method="GET" action="{{route('logout')}}">
+        <div class="btn-group">
+            <a class="btn btn-outline-danger" href="{{route('teams.create')}}">Créer une équipe</a>
+            <a class="btn btn-outline-danger" href="{{route('matches.create')}}">Ajouter un match</a>
+            <span class="btn btn-primary disabled">{{ session()->get('user')['email'] }}</span>
+            <button type="submit" class="btn btn-outline-primary">Déconnexion</a>
+        </div>
+    </form>
+@else
+    <a class="btn btn-outline-primary" href="/login">Connexion</a>
+@endif
             </div>
         </div>
         <div class="container">

@@ -23,7 +23,12 @@ Classement
                 </thead>
                 <tbody>
             @foreach ($ranking as $rank)
+            
+            @if($rank['team_id']==$cookieTeam)
+                <tr class="table-primary">    
+            @else
                 <tr>
+            @endif
                     <td>{{ $rank['rank'] }}</td>
                     <td><a href="{{route('teams.show', ['teamId'=>$rank['team_id']])}}">{{ $rank['name'] }}</a></td>
                     <td>{{ $rank['match_played_count'] }}</td>
@@ -35,6 +40,7 @@ Classement
                     <td>{{ $rank['goal_difference'] }}</td>
                     <td>{{ $rank['points'] }}</td>
                 </tr>
+                    
             @endforeach
             </tbody>
             </table>

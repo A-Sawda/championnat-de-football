@@ -5,6 +5,7 @@ Matchs de l'équipe
 @endsection
 
 @section('content')
+<a class="btn btn-primary" href="{{ route('teams.follow', ['teamId'=>$rankingRow['team_id']]) }}">Suivre</a><br><br>
 
 <table class="table table-striped">
                 <thead class="thead-dark">

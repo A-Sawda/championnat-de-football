@@ -167,4 +167,51 @@ class Repository
         }
         return $rankingRow[0];
     }
+
+    function addUser(string $email, string $password): int
+    {
+        return 
+        DB::table('users')
+        ->insertGetId([ 'email' =>$email,
+                        'password_hash' => Hash::make($password)])
+        ;
+    }
+
+    function getUser(string $email, string $password): array
+    {
+        $users=DB::table('users')->where('email', $email)->get()->toArray();
+        
+        if(empty($users)){
+            throw new Exception("Utilisateur inconnu"); 
+        }
+        $user=$users[0];
+        $passwordHash=$user["password_hash"];
+        $ok = Hash::check($password, $passwordHash);
+        if(!$ok){
+            throw new Exception("Utilisateur inconnu"); 
+        }
+    return ['id' => $user['id'], 'email'=> $user['email']/*, 'password_hash'=>$user['password_hash']*/];
+    }
+
+    function changePassword(string $email, string $oldPassword, string $newPassword): void 
+    {
+        $users=DB::table('users')->where('email', $email)->get()->toArray();
+        
+        if(empty($users)){
+        throw new Exception("Utilisateur inconnu");
+        }
+
+        $user=$users[0];
+        $passwordHash=$user["password_hash"];
+        $ok = Hash::check($oldPassword, $passwordHash);
+
+        if(!$ok){
+            throw new Exception("Utilisateur inconnu");
+        }
+
+        DB::table('users')
+        ->where('email', $email)
+        ->update([ 'password_hash'=>Hash::make($newPassword) ]);
+
+    }
 }

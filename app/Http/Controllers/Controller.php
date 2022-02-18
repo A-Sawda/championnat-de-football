@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Illuminate\Support\Facades\Cookie;
 use App\Repositories\Repository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -22,7 +23,8 @@ class Controller extends BaseController
     public function showRanking()
     {
         $ranking = $this->repository->sortedRanking();
-        return view('ranking', ['ranking' => $ranking]);
+        $cookieTeam=Cookie::get('followed_team');
+    return view('ranking', ['ranking' => $ranking, 'cookieTeam' =>$cookieTeam]);
     }
 
     public function showTeam(int $teamId)
@@ -109,12 +111,56 @@ class Controller extends BaseController
                 "date"=>$datetime
             ]);
         $this->repository->updateRanking();
-        $ranking = $this->repository->sortedRanking();
-        return redirect()->route('ranking.show', ['ranking' => $ranking]);
+        //$ranking = $this->repository->sortedRanking();
+        return redirect()->route('ranking.show');
           } catch (Exception $exception) {
-            return redirect()->route('matches.create')->withInput()->withErrors("Impossible de créer le match.");
+            return 
+            //$exception->getMessage();
+            redirect()->route('matches.create')->withInput()->withErrors("Impossible de créer le match.");
           }
        
+    }
+
+    public function showLoginForm()
+    {
+        return view('login');
+    }
+
+    public function login(Request $request, Repository $repository)
+    {
+        $rules = [
+            'email' => ['required', 'email', 'exists:users,email'],
+            'password' => ['required']
+        ];
+        $messages = [
+            'email.required' => 'Vous devez saisir un e-mail.',
+            'email.email' => 'Vous devez saisir un e-mail valide.',
+            'email.exists' => "Cet utilisateur n'existe pas.",
+            'password.required' => "Vous devez saisir un mot de passe.",
+        ];
+        $validatedData = $request->validate($rules, $messages);
+        try {
+        # TODO 1 : lever une exception si le mot de passe de l'utilisateur n'est pas correct
+        $email=$validatedData['email'];
+        $password=$validatedData['password'];
+        $value=$this->repository->getUser($email, $password);
+        # TODO 2 : se souvenir de l'authentification de l'utilisateur
+        $key='user';
+        $request->session()->put($key, $value);
+        } catch (Exception $e) {
+            return redirect()->back()->withInput()->withErrors("Impossible de vous authentifier.");
+        }
+        return redirect()->route('ranking.show');
+    }
+
+    public function followTeam(int $teamId)
+    {
+        return redirect()->route('ranking.show')->cookie('followed_team', $teamId);
+    }
+
+    public function logout(Request $request) {
+        $request->session()->forget('user');
+        return redirect()->route('ranking.show');
     }
 
 }

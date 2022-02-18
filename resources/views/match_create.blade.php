@@ -12,7 +12,7 @@
 
     <div class="form-group">
       <label for="team0">Équipe à domicile</label>
-      <select class="form-control" id="team0" name="team0"
+      <select id="team0" name="team0"
       aria-describedby="team0_feedback" 
             class="form-control @error('team0') is-invalid @enderror" required value="{{ old('team0') }}">
       @error('team0')
@@ -21,7 +21,7 @@
       </div>
       @enderror
           @foreach($teams as $team)
-          <option value="$team['id']">{{ $team['name'] }}</option>
+          <option value="{{$team['id']}}">{{ $team['name'] }}</option>
           @endforeach
       </select>
     </div>
@@ -29,7 +29,7 @@
 
     <div class="form-group">
       <label for="team1">Équipe à l'extérieur</label>
-      <select class="form-control" id="team1" name="team1"
+      <select id="team1" name="team1"
       aria-describedby="team1_feedback" 
             class="form-control @error('team1') is-invalid @enderror" required value="{{ old('team1') }}">
       @error('team1')
@@ -38,7 +38,7 @@
       </div>
       @enderror
            @foreach($teams as $team)
-          <option value="$team['id']">{{ $team['name'] }}</option>
+          <option value="{{$team['id']}}">{{ $team['name'] }}</option>
           @endforeach
       </select>
     </div>
@@ -46,7 +46,7 @@
 
     <div class="form-group">
       <label for="date">Date</label>
-      <input type="date" class="form-control" id="date" name="date"
+      <input type="date" id="date" name="date"
       aria-describedby="date_feedback" 
             class="form-control @error('date') is-invalid @enderror" required value="{{ old('date') }}">
       @error('date')
@@ -59,7 +59,7 @@
 
     <div class="form-group">
       <label for="time">Heure</label>
-      <input type="time" class="form-control" id="time" name="time"
+      <input type="time" id="time" name="time"
       aria-describedby="time_feedback" 
             class="form-control @error('time') is-invalid @enderror" required value="{{ old('time') }}">
       @error('time')
@@ -72,7 +72,7 @@
 
     <div class="form-group">
       <label for="score0">Nombre de buts de l'équipe à domicile</label>
-      <input type="number" class="form-control" id="score0" name="score0" min="0"
+      <input type="number" id="score0" name="score0" min="0"
       aria-describedby="score0_feedback" 
             class="form-control @error('score0') is-invalid @enderror" required value="{{ old('score0') }}">
       @error('score0')
@@ -85,7 +85,7 @@
 
     <div class="form-group">
       <label for="score1">Nombre de buts de l'équipe à l'extérieur</label>
-      <input type="number" class="form-control" id="score1" name="score1" min="0" 
+      <input type="number" id="score1" name="score1" min="0" 
       aria-describedby="score1_feedback" 
             class="form-control @error('score1') is-invalid @enderror" required value="{{ old('score1') }}">
       @error('score1')

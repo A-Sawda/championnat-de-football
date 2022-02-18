@@ -30,6 +30,8 @@ class DatabaseSeeder extends Seeder
         //SELECT * FROM teams;
         //var_dump($this->repository->team(3));
         //var_dump($this->repository->matches());*/
+        $repository->addUser('user@example.com', 'secret');
+        //var_dump($repository->getUser('user@example.com', 'secret'));
     }
 
 }
