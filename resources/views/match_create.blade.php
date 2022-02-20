@@ -4,6 +4,7 @@
 
 @section('content')
 <form method="POST" action="{{route('matches.store')}}">
+@csrf
 @if ($errors->any())
         <div class="alert alert-warning">
         Le match n'a pas pu être ajouté &#9785;

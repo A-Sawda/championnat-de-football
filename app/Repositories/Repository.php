@@ -214,4 +214,42 @@ class Repository
         ->update([ 'password_hash'=>Hash::make($newPassword) ]);
 
     }
+
+    function deleteMatch(int $team0, int $team1) : void{
+        $matches=DB::table('matches')
+        ->where('team0', '=', $team0)
+        ->where('team1', '=', $team1)
+        ->get()->toArray();
+        
+        if(empty($matches)){
+            throw new Exception("Match inconnu"); 
+        }
+
+        $match=$matches[0];
+        DB::table('matches')
+        ->where('team0', '=', $match['team0'])
+        ->where('team1', '=', $match['team1'])
+        ->delete();
+    }
+
+    function deleteTeam(int $team0) : void{
+        $teams=DB::table('teams')
+        ->where('id', '=', $team0)
+        ->get()->toArray();
+        
+        if(empty($teams)){
+            throw new Exception("Equipe inconnue"); 
+        }
+
+        $team=$teams[0];
+
+        DB::table('matches')
+        ->where('team0', '=', $team['id'])
+        ->orwhere('team1', '=', $team['id'])
+        ->delete();
+
+        DB::table('teams')
+        ->where('id', '=', $team['id'])
+        ->delete();
+    }
 }

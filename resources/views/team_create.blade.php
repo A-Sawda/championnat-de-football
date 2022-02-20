@@ -6,6 +6,7 @@ Création d'une équipe
 
 @section('content')
 <form method="POST" action="{{route('teams.store')}}">
+@csrf
     @if ($errors->any())
         <div class="alert alert-warning">
             L'équipe n'a pas pu être ajoutée &#9785;

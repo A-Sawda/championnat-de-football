@@ -1,13 +1,13 @@
 @extends('base')
 
-@section('title', 'Authentification')
+@section('title', 'S\'inscrire')
 
 @section('content')
-<form method="POST" action="{{route('login.post')}}" >
+<form method="POST" action="{{route('addUser.post')}}" >
 @csrf
     @if ($errors->any())
         <div class="alert alert-warning">
-          Vous n'avez pas pu être authentifié &#9785;
+          Vous n'avez pas pu être ajouté &#9785;
         </div>
     @endif
     <div class="form-group">
@@ -30,6 +30,6 @@
       </div>
       @enderror
     </div>
-    <button type="submit" class="btn btn-primary">Se connecter</button>
+    <button type="submit" class="btn btn-primary">S'inscrire</button>
 </form>
 @endsection

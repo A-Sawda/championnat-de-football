@@ -34,13 +34,19 @@ class Controller extends BaseController
         return view('team', ['rankingRow' => $rankingRow, 'teamMatches' => $teamMatches]);
     }
 
-    public function createTeam()
+    public function createTeam(Request $request)
     {
+        if (!$request->session()->has('user')) {
+        return redirect(route('login'));
+        }
         return view('team_create');
     }
 
     public function storeTeam(Request $request)
     {
+        if (!$request->session()->has('user')) {
+            return redirect(route('login'));
+        }
         $messages = [
             'team_name.required' => "Vous devez saisir un nom d'équipe.",
             'team_name.min' => "Le nom doit contenir au moins :min caractères.",
@@ -63,14 +69,20 @@ class Controller extends BaseController
           }
     }
 
-    public function createMatch()
+    public function createMatch(Request $request)
     {
         $teams=$this->repository->teams();
+        if (!$request->session()->has('user')) {
+            return redirect(route('login'));
+        }
         return view('match_create', ['teams'=>$teams]);
     }
 
     public function storeMatch(Request $request) 
     {
+        if (!$request->session()->has('user')) {
+            return redirect(route('login'));
+        }
         $messages = [
             'team0.required' => 'Vous devez choisir une équipe.',
             'team0.exists' => 'Vous devez choisir une équipe qui existe.',
@@ -162,6 +174,153 @@ class Controller extends BaseController
         $request->session()->forget('user');
         return redirect()->route('ranking.show');
     }
+
+    public function showdeleteMatchForm(Request $request)
+    {
+        if (!$request->session()->has('user')) {
+            return redirect(route('login'));
+        }
+        $teams=$this->repository->teams();
+        return view('deleteMatch', ['teams'=>$teams]);
+    }
+
+    public function deleteMatch(Request $request, Repository $repository)
+    {
+        
+        if (!$request->session()->has('user')) {
+            return redirect(route('login'));
+        }
+
+        $messages = [
+            'team0.required' => 'Vous devez choisir une équipe.',
+            'team0.exists' => 'Vous devez choisir une équipe qui existe.',
+            'team1.required' => 'Vous devez choisir une équipe.',
+            'team1.exists' => 'Vous devez choisir une équipe qui existe.',
+        ];
+
+        $rules = [
+            'team0' => ['required', 'exists:teams,id'],
+            'team1' => ['required', 'exists:teams,id'],
+        ];
+
+        $validatedData = $request->validate($rules, $messages);
+
+        try {
+            $team0=$validatedData['team0'];
+            $team1=$validatedData['team1'];
+            $this->repository->deleteMatch($team0, $team1);
+            return redirect()->route('ranking.show');
+            } catch (Exception $e) {
+                return redirect()->back()->withInput()->withErrors("Impossible de vous authentifier.");
+            }
+            
+    }
+
+    public function showchangePasswordForm()
+    {
+        return view('changePassword');
+    }
+
+    public function changePassword(Request $request, Repository $repository)
+    {
+        
+        if (!$request->session()->has('user')) {
+            return redirect(route('login'));
+        }
+
+        $rules = [
+            'email' => ['required', 'email', 'exists:users,email'],
+            'oldPassword' => ['required'],
+            'newPassword' => ['required']
+        ];
+        $messages = [
+            'email.required' => 'Vous devez saisir un e-mail.',
+            'email.email' => 'Vous devez saisir un e-mail valide.',
+            'email.exists' => "Cet utilisateur n'existe pas.",
+            'oldPassword.required' => "Vous devez saisir un mot de passe.",
+            'newPassword.required' => "Vous devez saisir un nouveau mot de passe.",
+        ];
+        $validatedData = $request->validate($rules, $messages);
+
+        try {
+            $email=$validatedData['email'];
+            $oldPassword=$validatedData['oldPassword'];
+            $newPassword=$validatedData['newPassword'];
+            $this->repository->changePassword($email, $oldPassword, $newPassword);
+        } catch (Exception $e) {
+            return redirect()->back()->withInput()->withErrors("Impossible de vous authentifier.");
+        }
+            return redirect()->route('ranking.show');
+    }
+
+    public function showaddUserForm()
+    {
+        return view('addUser');
+    }
+
+    public function addUser(Request $request, Repository $repository)
+    {
+        $rules = [
+            'email' => ['required', 'email', 'unique:users,email'],
+            'password' => ['required'],
+        ];
+        $messages = [
+            'email.required' => 'Vous devez saisir un e-mail.',
+            'email.unique' => "L'email existe déjà.",
+            'email.email' => 'Vous devez saisir un e-mail valide.',
+            'password.required' => "Vous devez saisir un mot de passe.",
+        ];
+        $validatedData = $request->validate($rules, $messages);
+
+        try {
+            $email=$validatedData['email'];
+            $password=$validatedData['password'];
+            $this->repository->addUser($email, $password);
+            return redirect()->route('ranking.show');
+        } catch (Exception $e) {
+            return redirect()->route('addUser')->withInput()->withErrors("Impossible de vous inscrire.");
+        }
+            
+    }
+
+
+    public function showdeleteTeamForm(Request $request)
+    {
+        if (!$request->session()->has('user')) {
+            return redirect(route('login'));
+        }
+        $teams=$this->repository->teams();
+        return view('deleteTeam', ['teams'=>$teams]);
+    }
+
+    public function deleteTeam(Request $request, Repository $repository)
+    {
+        
+        if (!$request->session()->has('user')) {
+            return redirect(route('login'));
+        }
+
+        $messages = [
+            'team0.required' => 'Vous devez choisir une équipe.',
+            'team0.exists' => 'Vous devez choisir une équipe qui existe.',
+        ];
+
+        $rules = [
+            'team0' => ['required', 'exists:teams,id'],
+        ];
+
+        $validatedData = $request->validate($rules, $messages);
+
+        try {
+            $team0=$validatedData['team0'];
+            $this->repository->deleteTeam($team0);
+            return redirect()->route('ranking.show');
+        } catch (Exception $e) {
+            return redirect()->back()->withInput()->withErrors("Impossible de vous authentifier.");
+        }
+            
+    }
+
 
 }
 
